@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+env/
+venv/
+.venv/
+
+# Environment variables
+.env
+
+# Node.js / React
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/frontend/build
+
+# Docker
+*.log
+
+# Alembic
+alembic/versions/*.pyc
+alembic/versions/__pycache__/
+
+# IDE/Editor
+.idea/
+.vscode/
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Miscellaneous
+**/coverage/
+**/dist/
+**/build/
+**/.cache/
+**/.pytest_cache/
+**/*.log

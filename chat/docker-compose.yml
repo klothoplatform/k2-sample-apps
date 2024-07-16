@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: admintest
+      POSTGRES_PASSWORD: password123!
+      POSTGRES_DB: dbname
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://admintest:password123!@db:5432/dbname
+    ports:
+      - "8000:8000"
+    command: >
+      sh -c "sleep 3 && pipenv run alembic upgrade head &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+volumes:
+  postgres_data:
