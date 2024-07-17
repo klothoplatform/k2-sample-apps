@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { fetchMessages, postMessage } from './api';
+import { fetchMessages, postMessage, fetchActiveUsers } from './api';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import {
   Container, Box, Typography, TextField, Button, List,
@@ -32,8 +32,8 @@ function App() {
   const [username] = useState(generateRandomUsername());
   const [content, setContent] = useState('');
   const [onlineUsers, setOnlineUsers] = useState([]);
-  const [status, setStatus] = useState('Connecting...');
-  const ws = useRef(null);
+  const [status] = useState('Connected');
+  const pollingInterval = useRef(null);
 
   useEffect(() => {
     async function loadMessages() {
@@ -44,32 +44,25 @@ function App() {
         console.error("Fetched messages are not an array:", messages);
       }
     }
-    loadMessages();
 
-    ws.current = new WebSocket(`ws://${window.location.host}/ws`);
-    ws.current.onopen = () => {
-      setStatus('Connected');
-      ws.current.send(JSON.stringify({ type: 'join', username }));
-    };
-    ws.current.onclose = () => {
-      setStatus('Disconnected');
-    };
-    ws.current.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      if (message.type === 'message') {
-        setMessages((prevMessages) => [...prevMessages, message.data]);
-      } else if (message.type === 'users') {
-        setOnlineUsers(message.data);
-      } else if (message.type === 'clear') {
-        setMessages([]);
+    async function loadActiveUsers() {
+      const users = await fetchActiveUsers(username);
+      if (Array.isArray(users)) {
+        setOnlineUsers(users);
+      } else {
+        console.error("Fetched users are not an array:", users);
       }
-    };
+    }
+
+    loadMessages();
+    loadActiveUsers();
+    pollingInterval.current = setInterval(() => {
+      loadMessages();
+      loadActiveUsers();
+    }, 5000);
 
     return () => {
-      if (ws.current.readyState === WebSocket.OPEN) {
-        ws.current.send(JSON.stringify({ type: 'leave', username }));
-      }
-      ws.current.close();
+      clearInterval(pollingInterval.current);
     };
   }, [username]);
 
@@ -81,6 +74,7 @@ function App() {
         method: 'DELETE',
       });
       setContent('');
+      setMessages([]);
       return;
     }
     const newMessage = await postMessage(username, content);

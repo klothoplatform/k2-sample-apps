@@ -23,3 +23,14 @@ export async function postMessage(username, content) {
         return null;
     }
 }
+
+export async function fetchActiveUsers(username) {
+    const response = await fetch(`/api/active-users?username=${username}`);
+    if (response.ok) {
+        const data = await response.json();
+        return Array.isArray(data.users) ? data.users : [];
+    } else {
+        console.error("Failed to fetch active users:", response.statusText);
+        return [];
+    }
+}

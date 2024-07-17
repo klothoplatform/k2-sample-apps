@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Request, WebSocket, WebSocketDisconnect, Depends
+from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -10,12 +10,8 @@ from pydantic import BaseModel
 from typing import List
 import os
 import datetime
-import json
 
 app = FastAPI()
-
-# In-memory storage for online users
-online_users = []
 
 class Message(BaseModel):
     id: int
@@ -30,53 +26,21 @@ class MessageCreate(BaseModel):
     username: str
     content: str
 
-class ConnectionManager:
-    def __init__(self):
-        self.active_connections: List[WebSocket] = []
-
-    async def connect(self, websocket: WebSocket):
-        await websocket.accept()
-        self.active_connections.append(websocket)
-
-    def disconnect(self, websocket: WebSocket):
-        self.active_connections.remove(websocket)
-
-    async def send_personal_message(self, message: str, websocket: WebSocket):
-        await websocket.send_text(message)
-
-    async def broadcast(self, message: str):
-        disconnected_connections = []
-        for connection in self.active_connections:
-            try:
-                await connection.send_text(message)
-            except WebSocketDisconnect:
-                disconnected_connections.append(connection)
-        for connection in disconnected_connections:
-            self.disconnect(connection)
-
-    async def broadcast_message(self, message: MessageModel):
-        await self.broadcast(json.dumps({"type": "message", "data": message.to_dict()}))
-
-    async def broadcast_clear(self):
-        await self.broadcast(json.dumps({"type": "clear"}))
-
-    async def broadcast_users(self):
-        users = [user['username'] for user in online_users]
-        await self.broadcast(json.dumps({"type": "users", "data": users}))
-
-manager = ConnectionManager()
+# In-memory storage for online users
+online_users = []
 
 @app.post("/api/messages", response_model=Message)
 async def create_message(message: MessageCreate, db: AsyncSession = Depends(get_db)):
+    # Convert the timestamp to a timezone-naive datetime
+    timestamp_naive = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
     new_message = MessageModel(
         username=message.username,
         content=message.content,
-        timestamp=datetime.datetime.utcnow()
+        timestamp=timestamp_naive
     )
     db.add(new_message)
     await db.commit()
     await db.refresh(new_message)
-    await manager.broadcast_message(new_message)
     return new_message
 
 @app.get("/api/messages", response_model=List[Message])
@@ -89,30 +53,24 @@ async def get_messages(db: AsyncSession = Depends(get_db)):
 async def clear_messages(db: AsyncSession = Depends(get_db)):
     await db.execute(delete(MessageModel))
     await db.commit()
-    await manager.broadcast_clear()
     return {"message": "All messages cleared"}
 
-@app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
-    await manager.connect(websocket)
-    try:
-        while True:
-            data = await websocket.receive_text()
-            message = json.loads(data)
-            if message['type'] == 'join':
-                online_users.append({"username": message['username'], "websocket": websocket})
-                await manager.broadcast_users()
-            elif message['type'] == 'leave':
-                user = next((user for user in online_users if user["websocket"] == websocket), None)
-                if user:
-                    online_users.remove(user)
-                await manager.broadcast_users()
-    except WebSocketDisconnect:
-        manager.disconnect(websocket)
-        user = next((user for user in online_users if user["websocket"] == websocket), None)
-        if user:
-            online_users.remove(user)
-        await manager.broadcast_users()
+@app.get("/api/active-users")
+async def get_active_users(username: str):
+    current_time = datetime.datetime.now(datetime.timezone.utc)
+    # Remove users who have not sent a heartbeat in the last 10 seconds
+    online_users[:] = [user for user in online_users if (current_time - user["last_seen"]).total_seconds() < 10]
+
+    # Update the current user's timestamp
+    for user in online_users:
+        if user["username"] == username:
+            user["last_seen"] = current_time
+            break
+    else:
+        online_users.append({"username": username, "last_seen": current_time})
+
+    active_usernames = [user["username"] for user in online_users]
+    return {"users": active_usernames}
 
 # Serve static files
 app.mount("/static", StaticFiles(directory="frontend/build/static"), name="static")
