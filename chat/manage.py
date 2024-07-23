@@ -70,8 +70,8 @@ def alembic_downgrade(rev):
 def clean_db():
     print("Cleaning up the database...")
     with start_stop_db():
-        run_command(["docker-compose", "exec", DB_SERVICE, "psql", "-U", "admintest", "-d", "postgres", "-c", "DROP DATABASE IF EXISTS dbname;"])
-        run_command(["docker-compose", "exec", DB_SERVICE, "psql", "-U", "admintest", "-d", "postgres", "-c", "CREATE DATABASE dbname;"])
+        run_command(["docker-compose", "exec", DB_SERVICE, "psql", "-U", "admintest", "-d", "postgres", "-c", "DROP DATABASE IF EXISTS mydb;"])
+        run_command(["docker-compose", "exec", DB_SERVICE, "psql", "-U", "admintest", "-d", "postgres", "-c", "CREATE DATABASE mydb;"])
 
 def regenerate_migrations():
     clean_db()

@@ -1,8 +1,13 @@
+import os
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = "postgresql+asyncpg://admintest:password123!@db:5432/dbname"
+
+db_host = os.getenv("MY_POSTGRES_RDS_ENDPOINT", "db:5432")
+
+# Construct the full DATABASE_URL
+DATABASE_URL = f"postgresql+asyncpg://admintest:password123!@{db_host}/mydb"
 
 engine = create_async_engine(DATABASE_URL, echo=True)
 AsyncSessionLocal = sessionmaker(

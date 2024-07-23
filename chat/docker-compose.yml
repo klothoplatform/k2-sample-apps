@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_USER: admintest
       POSTGRES_PASSWORD: password123!
-      POSTGRES_DB: dbname
+      POSTGRES_DB: mydb
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -15,7 +15,7 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL=postgresql+asyncpg://admintest:password123!@db:5432/dbname
+      - DATABASE_URL=postgresql+asyncpg://admintest:password123!@db:5432/mydb
     ports:
       - "8000:8000"
     command: >
