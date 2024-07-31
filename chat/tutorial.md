@@ -19,6 +19,7 @@ Our app will be containerized with Docker Compose for local development and then
 - Python 3.12
 - Node.js
 - Pipenv
+- Pulumi
 - Git (optional)
 - Klotho 2 CLI
 - AWS Account (for deployment)
@@ -56,26 +57,20 @@ Navigating this repo, you'll find the following directories:
 - `alembic` contains database migration scripts and configuration.
 
 ## 4. Running the App Locally
-Use the `manage.py` script for various operations:
-
-```bash
-pipenv run python manage.py <command>
-```
-
-Available commands:
-- `up`: Start all Docker Compose services
-- `up-logs`: Start services with logs
-- `down`: Stop all services
+Running commands will require using `docker-compose` and `pipenv`. Some example commands are:
+- `docker-compose up --build -d`: Start all Docker Compose services
+- `docker-compose up --build`: Start services with logs
+- `docker-compose down`: Stop all services
 
 Commands that require the database to be up:
-- `alembic-revision "Message"`: Create a new database migration
-- `alembic-upgrade`: Apply migrations
-- `alembic-downgrade <revision>`: Revert to a specific migration
+- `docker-compose run -rm web pipenv run alembic revision --autogenerate -m "Message"`: Create a new database migration with a message
+- `docker-compose run -rm web pipenv run alembic upgrade head`: Apply migrations
+- `docker-compose run -rm web pipenv run alembic downgrade <revision>`: Revert to a previous migration
 
 To run the app locally:
 
 ```bash
-pipenv run python manage.py up-logs
+docker-compose up --build
 ```
 
 This starts the app at `http://localhost:8000`, performs migrations, and streams logs to stdout.
@@ -131,7 +126,7 @@ postgres = aws.Postgres("my-postgres", username="admintest", password="password1
 fastapi.bind(postgres)
 ```
 
-> ⚠️ **Important**: Do not execute `infra.py` directly or import it into your application layer. The Klotho 2 CLI reads this file to deploy resources.
+> **Note**: Do not execute `infra.py` directly or import it into your application layer. The Klotho 2 CLI reads this file to deploy resources.
 
 ### Connecting Your App to Klotho 2 Constructs
 Klotho 2 uses environment variables to connect your app with defined resources:
