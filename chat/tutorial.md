@@ -154,18 +154,16 @@ engine = create_engine(database_url)
 Deploy your app using:
 
 ```bash
-klotho up infra.py -o=out
+klotho up infra.py
 ```
 
-This command deploys resources defined in `infra.py`. The `-o=out` option specifies the output directory for generated CloudFormation templates.
-
-After successful deployment, access your app at the provided URL.
+This command deploys resources defined in `infra.py`. After successful deployment, access your app at the provided URL.
 
 ### Cleaning Up
 Remove deployed resources:
 
 ```bash
-klotho down infra.py -o=out
+klotho down infra.py
 ```
 
 ## 7. Conclusion
