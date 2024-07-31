@@ -1,7 +1,7 @@
 # Tutorial: Building and Deploying Your First App with Klotho 2
 
 ## 1. Introduction
-Discover how to create, run, and deploy a sample app using Klotho 2, an innovative cloud infrastructure-as-code tool that simplifies cloud operations. Klotho 2 enables you to work with high-level cloud constructs, streamlining deployment with a single command.
+Discover how to create, run, and deploy a sample app using Klotho 2. Klotho 2 enables you to work with high-level cloud constructs, streamlining deployment with a single command. More details are available in our [announcement post](https://klo.dev/blog/klotho-2-release).
 
 In this tutorial, we'll build an ephemeral chat application using:
 
@@ -11,11 +11,6 @@ In this tutorial, we'll build an ephemeral chat application using:
 - PostgreSQL (Database)
 
 Our app will be containerized with Docker Compose for local development and then deployed to the cloud using Klotho 2.
-
-Key points:
-1. This demonstration app is not intended for production use.
-2. It showcases Klotho 2's capabilities in deploying a multi-component app to the cloud.
-3. Klotho 2 is currently in pre-alpha, best suited for testing and experimentation.
 
 > ⚠️ **Warning**: Klotho 2 is in pre-alpha status. Some features may be unstable or incomplete. This sample app stores database passwords in plain text and should not be considered production-ready.
 
