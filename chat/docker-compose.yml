@@ -18,6 +18,8 @@ services:
       - DATABASE_URL=postgresql+asyncpg://admintest:password123!@db:5432/mydb
     ports:
       - "8000:8000"
+    volumes:
+      - .:/app
     command: >
       sh -c "sleep 3 && pipenv run alembic upgrade head &&
              uvicorn app.main:app --host 0.0.0.0 --port 8000"
