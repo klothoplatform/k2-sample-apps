@@ -56,18 +56,28 @@ Navigating this repo, you'll find the following directories:
 - `infra.py` comes pre-configured for deployment with Klotho 2 and is located in the iac directory. 
 - `alembic` contains database migration scripts and configuration.
 
-## 4. Running the App Locally
+## 4. Local Development
 Running commands will require using `docker-compose` and `pipenv`. Some example commands are:
 - `docker-compose up --build -d`: Start all Docker Compose services
 - `docker-compose up --build`: Start services with logs
 - `docker-compose down`: Stop all services
 
 Commands that require the database to be up:
-- `docker-compose run -rm web pipenv run alembic revision --autogenerate -m "Message"`: Create a new database migration with a message
+- `docker-compose run -rm -e GENERATE_MIGRATION=true web pipenv run alembic revision --autogenerate -m "Message"`: Create a new database migration with a message
 - `docker-compose run -rm web pipenv run alembic upgrade head`: Apply migrations
 - `docker-compose run -rm web pipenv run alembic downgrade <revision>`: Revert to a previous migration
 
-To run the app locally:
+### Rebuilding the frontend
+To rebuild the frontend, run the following commands:
+
+```bash
+cd frontend
+npm install
+npm run build
+```
+
+### Running the app
+To run the app locally after building the frontend:
 
 ```bash
 docker-compose up --build
@@ -75,7 +85,7 @@ docker-compose up --build
 
 This starts the app at `http://localhost:8000`, performs migrations, and streams logs to stdout.
 
-[screenshot]
+![ephemeral chat app](images/ephemeral_chat.png)
 
 ## 5. Understanding Constructs and Configurations
 Constructs are high-level abstractions representing cloud resources. Klotho 2 supports various constructs such as containers, databases, and APIs.
@@ -150,7 +160,7 @@ engine = create_engine(database_url)
 Deploy your app using:
 
 ```bash
-klotho up infra.py
+klotho up ./iac/infra.py
 ```
 
 This command deploys resources defined in `infra.py`. After successful deployment, access your app at the provided URL.
@@ -166,7 +176,7 @@ In this examples, We want to retrieve the Load Balancer URL for the FastAPI serv
 Remove deployed resources:
 
 ```bash
-klotho down infra.py
+klotho down ./iac/infra.py
 ```
 
 ## 7. Conclusion
