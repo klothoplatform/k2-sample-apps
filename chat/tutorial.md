@@ -91,7 +91,7 @@ Constructs are high-level abstractions representing cloud resources. Klotho 2 su
 
 Each construct offers customizable configuration options, allowing you to specify details like container images or database names.
 
-> **Note**: Klotho 2 currently lacks custom support for secret configuration values. Exercise caution with sensitive information.
+> **Note**: Klotho 2 currently lacks custom support for secret configuration values. Exercise caution with sensitive information. We recommend using environment variables (`os.getenv("MY_SECRET")`) or files (`with open("key.pem") as f`) as simple, python-native ways to pass in secret values.
 
 ## 6. The Klotho 2 CLI and Deployment
 
