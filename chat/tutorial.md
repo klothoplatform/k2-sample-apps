@@ -19,7 +19,6 @@ Our app will be containerized with Docker Compose for local development and then
 - Python 3.12
 - Node.js
 - Pipenv
-- Pulumi
 - Git (optional)
 - Klotho 2 CLI
 - AWS Account (for deployment)
@@ -160,7 +159,8 @@ engine = create_engine(database_url)
 Deploy your app using:
 
 ```bash
-klotho up ./iac/infra.py
+cd ./iac
+klotho up infra.py
 ```
 
 This command deploys resources defined in `infra.py`. After successful deployment, access your app at the provided URL.
@@ -168,15 +168,16 @@ This command deploys resources defined in `infra.py`. After successful deploymen
 ### Gathering Outputs
 Once the app has deployed successfully, you can view outputs from stdout directly.
 
-[screenshot]
+![deploy and output](images/deploy_outputs.png)
 
-In this examples, We want to retrieve the Load Balancer URL for the FastAPI service. 
+In this sample app, We want to retrieve the Load Balancer URL for the FastAPI service. 
 
 ### Cleaning Up
 Remove deployed resources:
 
 ```bash
-klotho down ./iac/infra.py
+cd ./iac
+klotho down infra.py
 ```
 
 ## 7. Conclusion
