@@ -49,7 +49,11 @@ cd k2-sample-apps/chat-app
 pipenv install
 ```
 
-Navigating this repo, the source code for the backend lives in the `app` directory, and the react frontend lives in the `frontend` directory. `infra.py` comes pre-configured for deployment with Klotho 2 and is located in the iac directory. `alembic` contains database migration scripts and configuration.
+Navigating this repo, you'll find the following directories:
+- `app` contains the source code for the backend lives in the `app` 
+- `frontend` contains the react frontend 
+- `infra.py` comes pre-configured for deployment with Klotho 2 and is located in the iac directory. 
+- `alembic` contains database migration scripts and configuration.
 
 ## 4. Running the App Locally
 Use the `manage.py` script for various operations:
