@@ -1,6 +1,5 @@
 import subprocess
 import sys
-import time
 import os
 import argparse
 from contextlib import contextmanager
@@ -60,10 +59,7 @@ def main():
     
     alembic_downgrade_parser = subparsers.add_parser("alembic-downgrade", help="Downgrade the database.")
     alembic_downgrade_parser.add_argument("revision", help="Revision to downgrade to.")
-    
-
-    start_db_parser = subparsers.add_parser("start-db", help="Start the database service.")
-    stop_db_parser = subparsers.add_parser("stop-db", help="Stop the database service.")
+  
 
     args = parser.parse_args()
 
@@ -77,10 +73,6 @@ def main():
         alembic_revision(args.message)
     elif args.command == "alembic-upgrade":
         alembic_upgrade()
-    elif args.command == "start-db":
-        start_db()
-    elif args.command == "stop-db":
-        stop_db()
     else:
         parser.print_help()
 
