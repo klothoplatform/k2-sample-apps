@@ -81,6 +81,8 @@ pipenv run python manage.py up-logs
 
 This starts the app at `http://localhost:8000`, performs migrations, and streams logs to stdout.
 
+[screenshot]
+
 ## 5. Understanding Constructs and Configurations
 Constructs are high-level abstractions representing cloud resources. Klotho 2 supports various constructs such as containers, databases, and APIs.
 
@@ -158,6 +160,13 @@ klotho up infra.py
 ```
 
 This command deploys resources defined in `infra.py`. After successful deployment, access your app at the provided URL.
+
+### Gathering Outputs
+Once the app has deployed successfully, you can view outputs from stdout directly.
+
+[screenshot]
+
+In this examples, We want to retrieve the Load Balancer URL for the FastAPI service. 
 
 ### Cleaning Up
 Remove deployed resources:
