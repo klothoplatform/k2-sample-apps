@@ -29,8 +29,6 @@ Our app will be containerized with Docker Compose for local development and then
 2. Extract the file and move the `klotho` binary to a directory in your PATH.
 3. Verify the installation by running `klotho -h` in your terminal.
 
-For detailed instructions, refer to the [official Klotho 2 documentation](https://klo.dev/docs).
-
 ### Setting Up AWS Credentials
 Klotho 2 uses standard AWS credential management methods:
 
