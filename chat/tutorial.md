@@ -91,7 +91,7 @@ Constructs are high-level abstractions representing cloud resources. Klotho 2 su
 
 Each construct offers customizable configuration options, allowing you to specify details like container images or database names.
 
-> **Note**: Klotho 2 currently lacks custom support for secret configuration values. Exercise caution with sensitive information. We recommend using environment variables (`os.getenv("MY_SECRET")`) or files (`with open("key.pem") as f`) as simple, python-native ways to pass in secret values.
+> **Note**: Klotho 2 currently lacks custom support for secret configuration values. Exercise caution with sensitive information. We recommend using environment variables (`os.getenv("MY_SECRET")`) or files (`with open("key.pem") as f`) as simple, python-native ways to pass in secret values. We may still display or store these values in plain text.
 
 ## 6. The Klotho 2 CLI and Deployment
 
@@ -173,14 +173,16 @@ cd ./iac
 klotho up infra.py
 ```
 
-This command deploys resources defined in `infra.py`. After successful deployment, access your app at the provided URL.
+This command deploys resources defined in `infra.py`. The deploy should show progress, errors, and outputs.
+
+![deploy](images/deploy.png)
 
 ### Gathering Outputs
 Once the app has deployed successfully, you can view outputs from stdout directly.
 
-![deploy and output](images/deploy_outputs.png)
+![outputs](images/outputs.png)
 
-In this sample app, We want to retrieve the Load Balancer URL for the FastAPI service. 
+In this sample app, We want to retrieve the LoadBalancerUrl for the FastAPI service which we'll use as the endpoint we'll visit in our browser. Even after completion, it may take a few seconds for the LoadBalancer to be ready.
 
 ### Cleaning Up
 Remove deployed resources:
