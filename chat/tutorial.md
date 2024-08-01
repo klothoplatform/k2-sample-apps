@@ -119,8 +119,18 @@ app = klotho.Application(
     default_region=os.getenv("AWS_REGION", "us-east-1"),
 )
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
-dockerfile_path = os.path.abspath(os.path.join(dir_path, "..", "Dockerfile"))
+# Define the path to the project root and Dockerfile using pathlib
+dir_path = Path(__file__).parent
+dockerfile_path = dir_path.parent / "Dockerfile"
+
+fastapi = aws.FastAPI('my-fastapi',
+                      context="..",
+                      dockerfile=str(dockerfile_path),
+                      health_check_path="/",
+                      health_check_matcher="200-299",
+                      health_check_healthy_threshold=2,
+                      health_check_unhealthy_threshold=8,
+                )
 
 fastapi = aws.FastAPI('my-fastapi',
                       context="..",
