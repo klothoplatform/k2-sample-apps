@@ -1,7 +1,7 @@
 # Tutorial: Building and Deploying Your First App with Klotho 2
 
 ## 1. Introduction
-Discover how to create, run, and deploy a sample app using Klotho 2. Klotho 2 enables you to work with high-level cloud constructs, streamlining deployment with a single command. More details are available in our [announcement post](https://klo.dev/blog/klotho-2-release).
+Discover how to create, run, and deploy a sample app using Klotho 2. Klotho 2 enables you to work with high-level cloud constructs, streamlining deployment with a single command. More details are available in our [announcement post](https://klo.dev/klotho-2-release/).
 
 In this tutorial, we'll build an ephemeral chat application using:
 
