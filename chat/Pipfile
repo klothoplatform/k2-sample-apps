@@ -7,8 +7,11 @@ name = "pypi"
 fastapi = "*"
 uvicorn = "*"
 asyncpg = "*"
-sqlalchemy = {extras = ["asyncio"], version = "*"}
+sqlalchemy = {extras = ["asyncio"] }
 alembic = "*"
 
 [requires]
 python_version = "3.12"
+
+[dev-packages]
+klotho = "*"
