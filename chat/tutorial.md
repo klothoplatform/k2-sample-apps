@@ -130,15 +130,6 @@ fastapi = aws.FastAPI('my-fastapi',
                       health_check_unhealthy_threshold=8,
                 )
 
-fastapi = aws.FastAPI('my-fastapi',
-                      context="..",
-                      dockerfile=dockerfile_path,
-                      health_check_path="/",
-                      health_check_matcher="200-299",
-                      health_check_healthy_threshold=2,
-                      health_check_unhealthy_threshold=8,
-                )
-
 postgres = aws.Postgres("my-postgres", username="admintest", password="password123!", database_name="mydb",)
 fastapi.bind(postgres)
 ```
