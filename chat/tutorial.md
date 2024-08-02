@@ -12,6 +12,37 @@ In this tutorial, we'll build an ephemeral chat application using:
 
 Our app will be containerized with Docker Compose for local development and then deployed to the cloud using Klotho 2.
 
+Here's a preview of what Klotho 2 enables you to write, representing the core application level architecture with high level constructs. We'll be building on this example in the rest of the tutorial:
+
+```python
+import os
+import klotho
+import klotho.aws as aws
+
+app = klotho.Application(
+    "chat-app",
+    project=os.getenv("PROJECT_NAME", "my-project"),
+    environment=os.getenv("KLOTHO_ENVIRONMENT", "default"),
+    default_region=os.getenv("AWS_REGION", "us-east-1"),
+)
+
+# Define the path to the project root and Dockerfile using pathlib
+dir_path = Path(__file__).parent
+dockerfile_path = dir_path.parent / "Dockerfile"
+
+fastapi = aws.FastAPI('my-fastapi',
+                      context="..",
+                      dockerfile=str(dockerfile_path),
+                      health_check_path="/",
+                      health_check_matcher="200-299",
+                      health_check_healthy_threshold=2,
+                      health_check_unhealthy_threshold=8,
+                )
+
+postgres = aws.Postgres("my-postgres", username="admintest", password="password123!", database_name="mydb",)
+fastapi.bind(postgres)
+```
+
 > ⚠️ **Warning**: Klotho 2 is in pre-alpha status. Some features may be unstable or incomplete. This sample app stores database passwords in plain text and should not be considered production-ready.
 
 ## 2. Prerequisites and Installation
